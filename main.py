@@ -30,10 +30,11 @@ class HPL_Sweep:
         if (self.log_url != ''): requests.post(self.log_url, data=msg)
 
     def serialize(self):
-        with open(f'self.log_file.cxv', 'w') as f:
-            w = cxv.DictWriter(f, self.data.keys())
-            w.writeheader()
-            w.writerow(sel.data)
+        with open(f'{self.log_file}.csv', 'w') as f:
+            w = csv.writer(f)
+            w.writerow(list(self.data.keys()))
+            for row in zip(*self.data.values()):
+                w.writerow(row)
 
 
     def run(self, P, Q, N, NB):
@@ -62,7 +63,7 @@ class HPL_Sweep:
                     self.data['P'].append(p)
                     self.data['Q'].append(q)
                     self.data['NB'].append(nb)
-                    self.data['P'].append(self.N)
+                    self.data['N'].append(self.N)
                     self.data['gflops'].append(res)
 
                     self.signal(f'{self.exec} finished (P,Q,NB): ({p},{q},{nb}) -> {res} gflops')
